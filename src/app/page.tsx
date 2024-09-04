@@ -21,7 +21,7 @@ type DragItem = {
 /**
  * https://github.com/react-dnd/react-dnd/blob/main/packages/examples/src/04-sortable/simple/Card.tsx
  */
-export const Track = (props: {
+const Track = (props: {
   track: ISpotifyTrack
   index: number
   moveTrack: (args: { dragIndex: number; hoverIndex: number }) => void
