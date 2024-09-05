@@ -93,10 +93,20 @@ export const Track = (props: {
       style={{
         opacity: isDragging ? 0 : 1,
       }}
-      className='border border-solid border-black select-none'
+      className="cursor-pointer rounded p-2 bg-white select-text flex flex-row gap-4"
       data-handler-id={handlerId}
     >
-      {props.track.name}
+      <img
+        src={props.track.album.images[0].url}
+        alt={`album art for ${props.track.album.name}`}
+        height={props.track.album.images[0].height}
+        width={props.track.album.images[0].width}
+        className="h-[40px] w-[40px] rounded-sm"
+      />
+      <div>
+        <p>{props.track.name}</p>
+        <p className="text-sm">{props.track.artists[0].name}</p>
+      </div>
     </div>
   )
 }
