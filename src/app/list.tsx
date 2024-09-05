@@ -49,19 +49,10 @@ export const List: React.FC = () => {
       'save',
       items.map((i) => i.track.name)
     )
-    // console.log(
-    //   items
-    //     .slice(0, 4)
-    //     .map((i) => i.track.name)
-    //     .reverse()
-    // )
     // const ids = items.slice(0, 2).map(({ track }) => track.id).reverse()
     // await removeLikedTracks(ids)
 
-    // for (const id of ids) {
-    //   await addToLikes([id])
-    //   await new Promise((r) => setTimeout(r, 100))
-    // }
+    // await addToLikes(ids)
   }
 
   const moveTrack = ({
