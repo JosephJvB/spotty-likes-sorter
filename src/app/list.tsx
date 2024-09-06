@@ -10,16 +10,20 @@ import { addToLikes, getLikedTracks, removeLikedTracks } from './spotifyClient'
 
 export const List: React.FC = () => {
   const [items, setItems] = useState<ISpotifyPlaylistTrack[]>([])
-  const [changed, setChanged] = useState(false)
+  const [nextUrl, setNextUrl] = useState<string | undefined>()
+  const [saveIdx, setSaveIdx] = useState<number>(1)
+  const [orderedList, setOrderedList] = useState<string[]>([])
 
   const queryClient = useQueryClient()
-  useQuery({
+  const query = useQuery({
     queryKey: ['likes'],
     queryFn: async () => {
       try {
-        const likedTracks = await getLikedTracks()
-        setItems(likedTracks)
-        return likedTracks
+        const { tracks, next } = await getLikedTracks(nextUrl)
+        setItems(items.concat(tracks))
+        setOrderedList([...orderedList, ...tracks.map(({ track }) => track.id)])
+        setNextUrl(next)
+        return tracks
       } catch (error) {
         console.error(error)
         return []
@@ -36,23 +40,27 @@ export const List: React.FC = () => {
       }
     },
     onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ['likes'] })
+      setNextUrl(undefined)
+      queryClient.invalidateQueries({ queryKey: ['likes'] })
     },
   })
 
-  useEffect(() => {
-    console.log(items.map((i) => i.track.name))
-  }, [items])
-
   const saveTracks = async () => {
-    console.log(
-      'save',
-      items.map((i) => i.track.name)
-    )
-    // const ids = items.slice(0, 2).map(({ track }) => track.id).reverse()
-    // await removeLikedTracks(ids)
+    const ids = items.map(({ track }) => track.id)
+    await removeLikedTracks(ids)
 
-    // await addToLikes(ids)
+    /**
+     * had annoying ordering issue
+     * so just add tracks one by one
+     * even had ordering issues with 700ms
+     * feel like im taking crazy pills
+     */
+    for (const id of ids.reverse()) {
+      await addToLikes([id])
+      await new Promise((r) => setTimeout(r, 1000))
+      setSaveIdx((i) => i + 1)
+    }
+    setSaveIdx(1)
   }
 
   const moveTrack = ({
@@ -62,7 +70,6 @@ export const List: React.FC = () => {
     dragIndex: number
     hoverIndex: number
   }) => {
-    setChanged(true)
     setItems((prevCards) =>
       update(prevCards, {
         $splice: [
@@ -71,11 +78,12 @@ export const List: React.FC = () => {
         ],
       })
     )
-    // const next = [...items]
-    // const [removed] = items.splice(dragIndex, 1)
-    // next.splice(hoverIndex, 0, removed)
-    // setItems(next)
   }
+
+  const loadDisabled = query.isLoading || mutation.isPending
+  const listHasChanged =
+    items.map(({ track }) => track.id).join(',') !== orderedList.join(',')
+  const saveDisabled = !listHasChanged || mutation.isPending
 
   return (
     <div>
@@ -83,10 +91,14 @@ export const List: React.FC = () => {
         <div>
           <button
             onClick={() => mutation.mutate()}
-            disabled={!changed || mutation.isPending}
+            disabled={saveDisabled}
             className="px-4 py-2 bg-green-400 disabled:bg-green-200 disabled:cursor-not-allowed rounded mb-4 w-full cursor-pointer"
           >
-            {mutation.isPending ? 'pls wait x' : 'Save'}
+            {query.isPending && 'pls wait x'}
+            {mutation.isPending && `saving ${saveIdx} / ${items.length}`}
+            {!query.isPending &&
+              !mutation.isPending &&
+              `Save ${items.length} tracks`}
           </button>
           <div className="flex flex-col gap-2">
             {items.map(({ track }, idx) => {
@@ -100,6 +112,15 @@ export const List: React.FC = () => {
               )
             })}
           </div>
+          {!query.isLoading && (
+            <button
+              className="px-4 py-2 bg-green-300 disabled:bg-green-200 disabled:cursor-not-allowed rounded mb-4 w-full cursor-pointer"
+              disabled={loadDisabled}
+              onClick={() => query.refetch()}
+            >
+              {loadDisabled ? 'pls wait x' : 'Load more'}
+            </button>
+          )}
         </div>
       </DndProvider>
     </div>

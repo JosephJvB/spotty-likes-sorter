@@ -34,7 +34,7 @@ export const removeLikedTracks = async (trackIds: string[]) => {
   }
 }
 
-export const getLikedTracks = async () => {
+export const getLikedTracks = async (nextUrl?: string) => {
   console.log('getLikedTracks')
 
   const accessToken = getCookieByName(Cookies.spottyAuth)
@@ -43,32 +43,24 @@ export const getLikedTracks = async () => {
   }
 
   const tracks: ISpotifyPlaylistTrack[] = []
-  let url = `https://api.spotify.com/v1/me/tracks`
-  do {
-    console.log('  >', url)
-    const response = await fetch(url, {
-      headers: {
-        Authorization: 'Bearer ' + accessToken,
-      },
-    })
+  const url = nextUrl ?? `https://api.spotify.com/v1/me/tracks`
+  const response = await fetch(url, {
+    headers: {
+      Authorization: 'Bearer ' + accessToken,
+    },
+  })
 
-    if (!response.ok) {
-      const text = await response.text()
-      throw new Error('failed to get liked tracks\n' + text)
-    }
+  if (!response.ok) {
+    const text = await response.text()
+    throw new Error('failed to get liked tracks\n' + text)
+  }
 
-    const { items, next }: ISpotifyPaginatedResponse<ISpotifyPlaylistTrack> =
-      await response.json()
+  const { items, next }: ISpotifyPaginatedResponse<ISpotifyPlaylistTrack> =
+    await response.json()
 
-    url = next
-    tracks.push(...items)
-    /**
-     * TODO: handle pagination
-     */
-    break
-  } while (url)
+  tracks.push(...items)
 
-  return tracks
+  return { tracks, next }
 }
 
 export const addToLikes = async (trackIds: string[]) => {

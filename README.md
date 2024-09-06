@@ -1,2 +1,21 @@
 cant remember where raw feel should go. maybe before or after rollup? Im gonna say before.
 Ie between rollup and people
+
+got issue about ordering
+
+"ids": [
+    "1pBYkrJ4xK7v5nQNdZsd28", this one ends up first
+    "66lUo475j3vdRMbaiEauZj" this one ends up second
+]
+
+consistently
+
+and yet trying to save x20 at once was still causing issues
+
+tell you what I should do is save my top 20 like ids
+
+make a postman request to reset them
+
+and then do lots more testing
+
+maybe put a bigger delay between remove + add?
