@@ -1,6 +1,7 @@
 cant remember where raw feel should go. maybe before or after rollup? Im gonna say before.
 Ie between rollup and people
 
+https://developer.spotify.com/documentation/web-api/reference/save-tracks-user
 got issue about ordering
 
 "ids": [
@@ -38,3 +39,5 @@ ends up in this order:
 "25lJGQuHWeFhYt7ffpF2xz",
 
 consistently!!! WTF is that even
+
+https://community.spotify.com/t5/Spotify-for-Developers/Tracks-for-Current-User-SAVES-in-NOT-exact-sequence-as-expected/m-p/5656986
