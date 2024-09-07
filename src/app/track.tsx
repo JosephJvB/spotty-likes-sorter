@@ -106,6 +106,7 @@ export const Track = (props: {
       <div>
         <p>{props.track.name}</p>
         <p className="text-sm">{props.track.artists[0].name}</p>
+        <p>{props.track.id}</p>
       </div>
     </div>
   )

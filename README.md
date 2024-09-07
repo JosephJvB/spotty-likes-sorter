@@ -19,3 +19,22 @@ make a postman request to reset them
 and then do lots more testing
 
 maybe put a bigger delay between remove + add?
+
+
+add these:
+"6zyFMERNIyF0EDEVPC9Ck8",
+"25lJGQuHWeFhYt7ffpF2xz",
+"2CcH3jT1sLd06JU4VVBTq9",
+"6vKvFFPdgQ6um4y3Fj40OK",
+"0hwVwvdbBpxff1EBzmHLXz",
+"26b3oVLrRUaaybJulow9kz"
+
+ends up in this order:
+"2CcH3jT1sLd06JU4VVBTq9",
+"6vKvFFPdgQ6um4y3Fj40OK",
+"0hwVwvdbBpxff1EBzmHLXz",
+"6zyFMERNIyF0EDEVPC9Ck8",
+"26b3oVLrRUaaybJulow9kz"
+"25lJGQuHWeFhYt7ffpF2xz",
+
+consistently!!! WTF is that even

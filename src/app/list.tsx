@@ -7,6 +7,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { addToLikes, getLikedTracks, removeLikedTracks } from './spotifyClient'
+import { MyLikes } from './data'
 
 export const List: React.FC = () => {
   const [items, setItems] = useState<ISpotifyPlaylistTrack[]>([])
@@ -112,6 +113,19 @@ export const List: React.FC = () => {
               )
             })}
           </div>
+          {/* <button
+            className="px-4 py-2 bg-green-300 disabled:bg-green-200 disabled:cursor-not-allowed rounded mb-4 w-full cursor-pointer"
+            onClick={async () => {
+              await removeLikedTracks(MyLikes)
+
+              for (const id of MyLikes.reverse()) {
+                await addToLikes([id])
+                await new Promise((r) => setTimeout(r, 1000))
+              }
+            }}
+          >
+            FIX IT
+          </button> */}
           {!query.isLoading && (
             <button
               className="px-4 py-2 bg-green-300 disabled:bg-green-200 disabled:cursor-not-allowed rounded mb-4 w-full cursor-pointer"
