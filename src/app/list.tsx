@@ -1,7 +1,7 @@
 'use client'
 import { ISpotifyPlaylistTrack } from 'jvb-spotty-models'
 import { Track } from './track'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import update from 'immutability-helper'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -11,7 +11,10 @@ import { MyLikes } from './data'
 
 export const List: React.FC = () => {
   const [items, setItems] = useState<ISpotifyPlaylistTrack[]>([])
-  const [nextUrl, setNextUrl] = useState<string | undefined>()
+  /**
+   * dont do pagination anymore react SUCKS
+   */
+  // const [nextUrl, setNextUrl] = useState<string | undefined>()
   const [saveIdx, setSaveIdx] = useState<number>(1)
   const [orderedList, setOrderedList] = useState<string[]>([])
 
@@ -20,10 +23,11 @@ export const List: React.FC = () => {
     queryKey: ['likes'],
     queryFn: async () => {
       try {
-        const { tracks, next } = await getLikedTracks(nextUrl)
-        setItems(items.concat(tracks))
-        setOrderedList([...orderedList, ...tracks.map(({ track }) => track.id)])
-        setNextUrl(next)
+        const { tracks, next } = await getLikedTracks()
+        setItems(tracks)
+        setOrderedList(tracks.map(({ track }) => track.id))
+        // save these to ./data.ts MyLikes
+        // console.log(tracks.map(({ track }) => track.id))
         return tracks
       } catch (error) {
         console.error(error)
@@ -41,14 +45,12 @@ export const List: React.FC = () => {
       }
     },
     onSuccess: () => {
-      setNextUrl(undefined)
       queryClient.invalidateQueries({ queryKey: ['likes'] })
     },
   })
 
   const saveTracks = async () => {
     const ids = items.map(({ track }) => track.id)
-    await removeLikedTracks(ids)
 
     /**
      * had annoying ordering issue
@@ -57,10 +59,12 @@ export const List: React.FC = () => {
      * feel like im taking crazy pills
      */
     for (const id of ids.reverse()) {
+      await removeLikedTracks([id])
       await addToLikes([id])
       await new Promise((r) => setTimeout(r, 1000))
       setSaveIdx((i) => i + 1)
     }
+
     setSaveIdx(1)
   }
 
@@ -126,7 +130,8 @@ export const List: React.FC = () => {
           >
             FIX IT
           </button> */}
-          {!query.isLoading && (
+          {/* HIDE LOAD MORE BUTTON */}
+          {/* {!query.isLoading && (
             <button
               className="px-4 py-2 bg-green-300 disabled:bg-green-200 disabled:cursor-not-allowed rounded mb-4 w-full cursor-pointer"
               disabled={loadDisabled}
@@ -134,7 +139,7 @@ export const List: React.FC = () => {
             >
               {loadDisabled ? 'pls wait x' : 'Load more'}
             </button>
-          )}
+          )} */}
         </div>
       </DndProvider>
     </div>

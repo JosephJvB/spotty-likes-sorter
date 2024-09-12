@@ -9,7 +9,7 @@ import { Cookies, getCookieByName } from './util'
  */
 
 export const removeLikedTracks = async (trackIds: string[]) => {
-  console.log('removeLikedTracks', { trackIds: trackIds.length })
+  console.log('removeLikedTracks')
 
   const accessToken = getCookieByName(Cookies.spottyAuth)
   if (!accessToken) {
