@@ -1,16 +1,18 @@
-'use client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TokenSetter } from './tokenSetter'
+import { QueryWrapper } from '../query-wrapper'
+import { redirect } from 'next/navigation'
 
-const queryClient = new QueryClient()
+export default function Page(props: { searchParams: Record<string, string> }) {
+  if (!props.searchParams.code) {
+    redirect('/')
+    return
+  }
 
-export default function Page() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-        {/* had to move query stuff inside a child of queryclientprovider */}
-        <TokenSetter />
-      </main>
-    </QueryClientProvider>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <QueryWrapper>
+        <TokenSetter code={props.searchParams.code} />
+      </QueryWrapper>
+    </main>
   )
 }

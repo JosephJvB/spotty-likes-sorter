@@ -105,7 +105,7 @@ export const submitCode = async (spotifyCode: string) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${Buffer.from(
-          `${process.env.NEXT_PUBLIC_SpotifyClientId}:${process.env.SpotifyClientSecret}`
+          `${process.env.SpotifyClientId}:${process.env.SpotifyClientSecret}`
         ).toString('base64')}`,
       },
     }
@@ -128,7 +128,7 @@ export const getStartUrl = () =>
   'https://accounts.spotify.com/authorize?' +
   new URLSearchParams({
     response_type: 'code',
-    client_id: process.env.NEXT_PUBLIC_SpotifyClientId!,
+    client_id: process.env.SpotifyClientId!,
     scope: [
       // 'user-read-private',
       // 'user-read-email',

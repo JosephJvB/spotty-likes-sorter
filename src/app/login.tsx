@@ -1,11 +1,9 @@
+'use client'
+
 export const Login: React.FC<{
   url: string
 }> = (props) => {
   const login = () => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
     window.location.href = props.url
   }
 

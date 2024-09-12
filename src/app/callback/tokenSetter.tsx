@@ -1,14 +1,16 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+'use client'
+import { useQuery } from '@tanstack/react-query'
 import { Cookies, deleteCookie, setCookie } from '../util'
 
-export const TokenSetter: React.FC = () => {
+export const TokenSetter: React.FC<{
+  code: string
+}> = (props) => {
   const trySetToken = async () => {
-    const code = new URLSearchParams(window.location.search).get('code')
-    if (!code) {
+    if (!props.code) {
       return
     }
 
-    const response = await fetch(`/api/token?code=${code}`)
+    const response = await fetch(`/api/token?code=${props.code}`)
     const data: { access_token: string; expires_in: number } =
       await response.json()
 

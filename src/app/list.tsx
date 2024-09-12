@@ -7,7 +7,8 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { addToLikes, getLikedTracks, removeLikedTracks } from './spotifyClient'
-import { MyLikes } from './data'
+// might have to receive this as props now that im doing server/client better
+// import { MyLikes } from './data'
 
 export const List: React.FC = () => {
   const [items, setItems] = useState<ISpotifyPlaylistTrack[]>([])
